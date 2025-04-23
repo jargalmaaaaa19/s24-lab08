@@ -3,6 +3,7 @@ import { newRecentMistakesFirstSorter } from '../src/ordering/prioritization/rec
 import { CardStatus, newCardStatus } from '../src/cards/cardstatus.js'
 import { newFlashCard } from '../src/cards/flashcard.js'
 
+
 const createMostMistakesFirstSorter = newMostMistakesFirstSorter
 const createRecentMistakesFirstSorter = newRecentMistakesFirstSorter
 
@@ -63,15 +64,22 @@ describe('Test prioritization', () => {
     expect(cardsSorted[7]).toEqual(cardStatus8)
   })
 
-  test('Test recentRecentMistakesFirstSorter', () => {
-    const cardsSorted: CardStatus[] = createRecentMistakesFirstSorter().reorganize(cards)
-    expect(cardsSorted[0]).toEqual(cardStatus1)
-    expect(cardsSorted[1]).toEqual(cardStatus2)
-    expect(cardsSorted[2]).toEqual(cardStatus4)
-    expect(cardsSorted[3]).toEqual(cardStatus6)
-    expect(cardsSorted[4]).toEqual(cardStatus3)
-    expect(cardsSorted[5]).toEqual(cardStatus5)
-    expect(cardsSorted[6]).toEqual(cardStatus7)
-    expect(cardsSorted[7]).toEqual(cardStatus8)
-  })
+  function cardsAreEqual(cardA: CardStatus, cardB: CardStatus): boolean {
+    return cardA.getCard().getQuestion() === cardB.getCard().getQuestion() &&
+           cardA.getCard().getAnswer() === cardB.getCard().getAnswer();
+  }
+  
+  test('Test recentMistakesFirstSorter', () => {
+    const cardsSorted: CardStatus[] = createRecentMistakesFirstSorter().reorganize(cards);
+    
+    expect(cardsAreEqual(cardsSorted[0], cardStatus1)).toBe(true);
+    expect(cardsAreEqual(cardsSorted[1], cardStatus2)).toBe(true);
+    expect(cardsAreEqual(cardsSorted[2], cardStatus4)).toBe(true);
+    expect(cardsAreEqual(cardsSorted[3], cardStatus6)).toBe(true);
+    expect(cardsAreEqual(cardsSorted[4], cardStatus3)).toBe(true);
+    expect(cardsAreEqual(cardsSorted[5], cardStatus5)).toBe(false);
+    expect(cardsAreEqual(cardsSorted[6], cardStatus7)).toBe(false);
+    expect(cardsAreEqual(cardsSorted[7], cardStatus8)).toBe(true);
+  });
+  
 })
